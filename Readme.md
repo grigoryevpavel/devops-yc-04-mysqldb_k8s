@@ -26,6 +26,7 @@
 ## 1. Разворачивание кластера БД MySql
 
 1. Существуют следующие классы хостов в yandex cloud:
+
 | Название     | Архитектура процессора    |  Количество памяти и ядер |
 |--------------|---------------------------|---------------------------|
 | s1.micro     | Intel Broadwell           | 2 ядра и 8 Гб             |
@@ -41,6 +42,7 @@
 | s2.xlarge    | Intel Cascade Lake        | 16 ядра и 64 Гб           |
 | s2.2xlarge   | Intel Cascade Lake        | 24 ядра и 96 Гб           |
 | b2.medium    | Intel Cascade Lake        | 2 ядра(50% CPU) и 4 Гб    |
+
 Для решения используем класс **b1.medium** 
 
 2. Манифест развертывания кластера Mysql расположен в [файле](terraform/main.tf)
@@ -93,14 +95,14 @@
     | resource_preset_id        | s1.micro              |              | Класс хоста. s1 соответсвует ядрам Intel Broadwell, s2 соответствует ядрам Intel Cascade Lake |
     | disk_type_id              | network-ssd           |              | Тип диска. Возможные варианты: network-hdd, network-ssd, local-ssd,network-ssd-nonreplicated  |
     | disk_size                 | 20 Гб                 |              | Размер диска. Допустимыми являются значения: <ul> <li>для ssd от 10 до 8192 Гб</li><li> для hdd от 10 до 2048 Гб</li><li>для local-ssd от 368 до 2944 Гб</li><li>для нереплицируемого ssd от 93 до 8184 Гб</li></ul>                                                        |
-    | maintenance_window        | {type = "ANYTIME"}    |              | Окно обслуживания(время проведения резервного копирования, сбора статистик). Возможные варианты типов обслуживания: ANYTIME и WEEKLY. Если задан тип обслуживания WEEKLY, то необходимо указать значения начала окна обслуживания: day и hour                            |
+    | maintenance_window        | ```{type = "ANYTIME"}``` |           | Окно обслуживания(время проведения резервного копирования, сбора статистик). Возможные варианты типов обслуживания: ANYTIME и WEEKLY. Если задан тип обслуживания WEEKLY, то необходимо указать значения начала окна обслуживания: day и hour                            |
     | backup_window_start       | ```{hours=23,minutes=59}``` |        | Время начала резерного копирования.                                                           |
-    | backup_retain_period_days | 7               |              | Время хранения резервных копий в днях.                                                              |
+    | backup_retain_period_days | 7                     |              | Время хранения резервных копий в днях.                                                        |
     | restore                   | отсутствует           |              | Параметры восстановления. По умолчанию не задано и восстановление не происходит.              | 
-    | access                    | ```{data_lens=true, web_sql=true, data_transfer=false }```| | Доступ к инструментам Yandex DataLens, SQL-запросам из консоли websql и механизму переноса данных из текущего инстанса MySQL в сервис MySql Yandex Cloud (DataTransfer)                                                                              | 
+    | access                    | ```{data_lens=true, web_sql=true, data_transfer=false }``` | | Доступ к инструментам Yandex DataLens, SQL-запросам из консоли websql и механизму переноса данных из текущего инстанса MySQL в сервис MySql Yandex Cloud (DataTransfer)                                                                              | 
     | allow_ingress_v4_cidr_blocks | ["0.0.0.0/0"]      |              | Разрешенные ip-адреса для подключения к порту кластера 3306. По молчанию разврешены все подключения |
     | default_db                | ```{name="netology_db",username="user1",password="Fg52341D"}```| | Параметры создания и подключения к БД по умолчанию.               |
-    | subnets                   | отсутствует           | X            | Параметры подсетей в которых создаются хосты кластера. Тип список объектов. Каждый объект включает в себя следующие свойства: <ul> <li> zone - зона доступности</li><li> name - имя подсети</li><li>cidr - ip-адрес подсеть</li><li> subnet_id - идентификатор подсети возвращенный [модулем subnet](terraform/modules/subnet) </li><ul>                                                                                                  |
+    | subnets                   | отсутствует           | X            | Параметры подсетей в которых создаются хосты кластера. Тип список объектов. Каждый объект включает в себя следующие свойства: <ul><li> zone - зона доступности</li><li> name - имя подсети</li><li>cidr - ip-адрес подсеть</li><li> subnet_id - идентификатор подсети возвращенный [модулем subnet](terraform/modules/subnet) </li><ul> |
 
 В итоге была развернут кластер:
 <img src='images/mysql_cluster.png'/>
